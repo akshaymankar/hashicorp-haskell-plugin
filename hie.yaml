@@ -1,0 +1,7 @@
+cradle:
+  cabal:
+    - path: "./examples/kv-plugin/./Main.hs"
+      component: "kv-plugin:exe:grpc-plugin"
+
+    - path: "./src"
+      component: "lib:hashicorp-plugin"

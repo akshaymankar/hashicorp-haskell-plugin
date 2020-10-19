@@ -1,0 +1,23 @@
+cabal-version:       >=1.10
+name:                kv-plugin
+version:             0.1.0.0
+data-files:          kv.proto
+author:              Akshay Mankar
+maintainer:          itsakshaymankar@gmail.com
+data-files:          kv.proto
+build-type:          Simple
+
+executable grpc-plugin
+  main-is:             Main.hs
+  build-depends:       base >=4.13 && <4.14
+                     , bytestring >= 0.10
+                     , hashicorp-plugin
+                     , mtl
+                     , mu-grpc-server == 0.4.0.0
+                     , mu-optics
+                     , mu-protobuf == 0.4.0.0
+                     , mu-rpc == 0.4.0.0
+                     , mu-schema == 0.3.1.1
+                     , text
+                     , unordered-containers
+  default-language:    Haskell2010

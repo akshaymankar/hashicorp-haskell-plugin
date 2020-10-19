@@ -1,0 +1,19 @@
+source-repository-package
+  type: git
+  location: https://github.com/fiadliel/http2-grpc-haskell
+  tag: 43e81a5c738128214c585dfb178225e4f5a644e9
+  subdir: http2-grpc-proto3-wire
+
+source-repository-package
+  type: git
+  location: https://github.com/akshaymankar/mu-haskell
+  tag: 2ef33f6035161318fe603070b84ee648e13508a0
+  subdir: grpc/server
+
+source-repository-package
+  type: git
+  location: https://github.com/akshaymankar/mu-haskell
+  tag: 2ef33f6035161318fe603070b84ee648e13508a0
+  subdir: core/rpc
+
+packages: ./hashicorp-plugin.cabal ./examples/kv-plugin/kv-plugin.cabal
