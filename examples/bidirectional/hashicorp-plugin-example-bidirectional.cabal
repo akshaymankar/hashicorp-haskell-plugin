@@ -10,12 +10,12 @@ executable hashicorp-plugin-example-bidirectional
   main-is:             Main.hs
   build-depends:       base >=4.13 && <4.14
                      , hashicorp-plugin
-                     , mu-grpc-server == 0.4.0.0
+                     , mu-grpc-server >= 0.4.0.0
                      , mu-grpc-client >= 0.4
                      , mu-optics
-                     , mu-protobuf == 0.4.0.0
-                     , mu-rpc == 0.4.0.0
-                     , mu-schema == 0.3.1.1
+                     , mu-protobuf >= 0.4
+                     , mu-rpc >= 0.4
+                     , mu-schema >= 0.3.1.1
                      , text
                      , unordered-containers
                      , data-has
