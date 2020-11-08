@@ -73,10 +73,6 @@ newtype PluginT a = PluginT {unPluginT :: ReaderT (TVar Health.HealthMap, TVar B
       MonadReader (TVar Health.HealthMap, TVar Broker.Connections)
     )
 
-defaultResolver :: TVar Health.HealthMap -> TVar Broker.Connections -> PluginT a -> ServerErrorIO a
-defaultResolver health conns p =
-  flip runReaderT (health, conns) $ unPluginT p
-
 data ServeConfig pkgs hs = ServeConfig
   { handshakeConfig :: HandshakeConfig,
     versionedPluginSet :: HashMap Version (Plugin pkgs hs)
@@ -128,7 +124,7 @@ startServing sock (Plugin server) = do
   broker <- newTVarIO mempty
   flip runReaderT health $ (Health.setServingStatus "plugin" Health.ServingStatusServing)
   let servers = combineServers Broker.grpcBrokerServer $ combineServers Health.healthServer server
-      handlers = gRpcServerHandlers (defaultResolver health broker) msgProtoBuf servers
+      handlers = gRpcServerHandlers (flip runReaderT (health, broker) . unPluginT) msgProtoBuf servers
       app =
         Wai.grpcApp
           [uncompressed, gzip]
