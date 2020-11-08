@@ -12,7 +12,7 @@ version:             0.1.0.0
 license-file:        LICENSE
 author:              Akshay Mankar
 maintainer:          itsakshaymankar@gmail.com
-data-files:          health.proto
+data-files:          health.proto, grpc_broker.proto
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
 
@@ -28,6 +28,7 @@ library
                      , network
                      , temporary
                      , mu-grpc-server >=0.4
+                     , mu-grpc-client >=0.4
                      , mu-rpc >=0.4
                      , mu-protobuf >= 0.4
                      , mu-schema >=0.3.1
@@ -38,5 +39,12 @@ library
                      , broadcast-chan
                      , http2-grpc-types
                      , warp
+                     , mu-optics
+                     , first-class-families >= 0.8
+                     , http2-client-grpc
+                     , http2-client
+                     , stm
+                     , data-has
   exposed-modules:     Hashicorp.Plugin
                      , GRpc.Health.V1
+                     , Hashicorp.GRpc.Broker

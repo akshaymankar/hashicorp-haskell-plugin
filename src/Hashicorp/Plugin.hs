@@ -1,15 +1,28 @@
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PartialTypeSignatures #-}
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 
 module Hashicorp.Plugin where
 
-import Control.Monad.State (StateT (runStateT), evalStateT, when)
+import Control.Concurrent.STM (TVar, newTVarIO)
+import Control.Monad (when)
+import Control.Monad.Except (MonadError)
+import Control.Monad.IO.Class (MonadIO)
+import Control.Monad.Reader (MonadReader, ReaderT, runReaderT)
 import qualified Data.Attoparsec.Text as A
 import Data.HashMap.Lazy (HashMap)
 import qualified Data.HashMap.Lazy as Map
@@ -19,10 +32,14 @@ import qualified Data.List as List
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
+import Fcf (Eval)
+import Fcf.Data.List (type (++))
+import GHC.TypeLits (Symbol)
 import qualified GRpc.Health.V1 as Health
+import qualified Hashicorp.GRpc.Broker as Broker
 import Mu.GRpc.Server (GRpcMessageProtocol (..), GRpcServerHandlers, gRpcServerHandlers, msgProtoBuf)
 import Mu.Rpc (Package, TypeRef)
-import Mu.Server (ServerErrorIO, ServerT)
+import Mu.Server (ServerError, ServerErrorIO, ServerT (NoPackages, Packages), SingleServerT)
 import Network.GRPC.HTTP2.Encoding (gzip, uncompressed)
 import qualified Network.GRPC.Server as Wai
 import qualified Network.Socket as Network
@@ -41,18 +58,28 @@ data HandshakeConfig = HandshakeConfig
 
 type PluginServer = ServerT
 
-data
+newtype
   Plugin
-    (pkgs :: [Package snm mnm anm (TypeRef snm)])
-    (m :: Type -> Type)
-    (hs :: [[[Type]]]) = Plugin
-  { pluginServer :: PluginServer '[] () pkgs m hs,
-    pluginResolver :: forall a. m a -> ServerErrorIO a
-  }
+    (pkgs :: [Package Symbol Symbol Symbol (TypeRef Symbol)])
+    (hs :: [[[Type]]]) = Plugin {pluginServer :: PluginServer '[] () pkgs PluginT hs}
 
-data ServeConfig pkgs m hs = ServeConfig
+newtype PluginT a = PluginT {unPluginT :: ReaderT (TVar Health.HealthMap, TVar Broker.Connections) ServerErrorIO a}
+  deriving
+    ( Functor,
+      Applicative,
+      Monad,
+      MonadIO,
+      MonadError ServerError,
+      MonadReader (TVar Health.HealthMap, TVar Broker.Connections)
+    )
+
+defaultResolver :: TVar Health.HealthMap -> TVar Broker.Connections -> PluginT a -> ServerErrorIO a
+defaultResolver health conns p =
+  flip runReaderT (health, conns) $ unPluginT p
+
+data ServeConfig pkgs hs = ServeConfig
   { handshakeConfig :: HandshakeConfig,
-    versionedPluginSet :: HashMap Version (Plugin pkgs m hs)
+    versionedPluginSet :: HashMap Version (Plugin pkgs hs)
   }
 
 data Protocol
@@ -66,7 +93,10 @@ instance Show Protocol where
 
 type Version = Int
 
-serve :: (GRpcServerHandlers pkgs MsgProtoBuf m '[] hs) => ServeConfig pkgs m hs -> IO ()
+serve ::
+  (GRpcServerHandlers pkgs MsgProtoBuf PluginT '[] hs) =>
+  ServeConfig pkgs hs ->
+  IO ()
 serve cfg@ServeConfig {..} = do
   when
     (not $ isMagicConfigured handshakeConfig)
@@ -87,20 +117,29 @@ serve cfg@ServeConfig {..} = do
 isMagicConfigured :: HandshakeConfig -> Bool
 isMagicConfigured HandshakeConfig {..} = not (null magicCookieKey || null magicCookieValue)
 
-startServing :: (GRpcServerHandlers pkgs MsgProtoBuf m '[] hs) => Network.Socket -> Plugin pkgs m hs -> IO ()
-startServing sock (Plugin server f) = do
-  m <- Health.newHealthMap
-  (_, m') <- flip runStateT m (Health.setServingStatus "plugin" Health.ServingStatusServing)
-  let healthHandlers = gRpcServerHandlers (flip evalStateT m') msgProtoBuf Health.healthServer
-      pluginHandlers = gRpcServerHandlers f msgProtoBuf server
+startServing ::
+  forall pkgs hs.
+  (GRpcServerHandlers pkgs MsgProtoBuf PluginT '[] hs) =>
+  Network.Socket ->
+  Plugin pkgs hs ->
+  IO ()
+startServing sock (Plugin server) = do
+  health <- newTVarIO =<< Health.newHealthMap
+  broker <- newTVarIO mempty
+  flip runReaderT health $ (Health.setServingStatus "plugin" Health.ServingStatusServing)
+  let servers = combineServers Broker.grpcBrokerServer $ combineServers Health.healthServer server
+      handlers = gRpcServerHandlers (defaultResolver health broker) msgProtoBuf servers
       app =
         Wai.grpcApp
           [uncompressed, gzip]
-          (pluginHandlers <> healthHandlers)
+          handlers
   runSettingsSocket defaultSettings sock app
 
-combineServers :: ServerT chn info pkgs1 m hs1 -> ServerT chn info pkgs2 m hs2 -> ServerT chn info pkgs m hs
-combineServers = undefined
+combineServers ::
+  SingleServerT () pkg1 m hs1 ->
+  ServerT '[] () restPkgs m restHs ->
+  ServerT '[] () (pkg1 ': restPkgs) m (Eval (hs1 ++ restHs))
+combineServers (Packages p1 NoPackages) s2 = Packages p1 s2
 
 coreProtocolVersion :: Integer
 coreProtocolVersion = 1
@@ -144,7 +183,7 @@ listenUnix = do
   Network.listen sock 5
   pure sock
 
-selectPlugins :: ServeConfig s m hs -> IO (Version, Plugin s m hs)
+selectPlugins :: ServeConfig s hs -> IO (Version, Plugin s hs)
 selectPlugins ServeConfig {..} = matchingVersion versionedPluginSet <$> clientVersions
 
 clientVersions :: IO [Version]

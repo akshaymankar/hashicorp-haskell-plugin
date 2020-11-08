@@ -33,10 +33,12 @@ where
 import BroadcastChan (BroadcastChan, In, Out, newBChanListener, newBroadcastChan, readBChan)
 import Conduit (ConduitT, (.|))
 import qualified Conduit as C
-import Control.Monad (forever)
-import Control.Monad.IO.Class (MonadIO)
-import Control.Monad.State (MonadState, get, put)
+import Control.Concurrent.STM (TVar, atomically, readTVarIO, swapTVar)
+import Control.Monad (forever, void)
+import Control.Monad.IO.Class (MonadIO (liftIO))
+import Control.Monad.Reader (MonadReader, asks)
 import qualified Data.Conduit.List as C
+import Data.Has (Has, getter)
 import Data.HashMap.Lazy (HashMap)
 import qualified Data.HashMap.Lazy as M
 import Data.Text (Text)
@@ -99,21 +101,21 @@ newHealthMap = do
   chan <- newBroadcastChan
   pure $ HealthMap $ M.singleton "" (ServingStatusServing, chan)
 
--- | TODO: make this concurrency safe?
-setServingStatus :: (MonadState HealthMap m, MonadIO m) => Text -> ServingStatus -> m ()
+setServingStatus :: (MonadReader r m, Has (TVar HealthMap) r, MonadIO m) => Text -> ServingStatus -> m ()
 setServingStatus name newStatus = do
-  HealthMap {..} <- get
+  mapTVar <- asks getter
+  HealthMap {..} <- (liftIO . readTVarIO) mapTVar
   chan <- maybe newBroadcastChan (pure . snd) (M.lookup name healthMap)
-  put (HealthMap (M.insert name (newStatus, chan) healthMap))
+  void . liftIO . atomically $ swapTVar mapTVar (HealthMap (M.insert name (newStatus, chan) healthMap))
 
-check :: (MonadServer m, MonadState HealthMap m) => HealthCheckRequest -> m HealthCheckResponse
+check :: (MonadServer m, MonadReader r m, Has (TVar HealthMap) r) => HealthCheckRequest -> m HealthCheckResponse
 check HealthCheckRequest {..} = do
-  HealthMap {..} <- get
+  HealthMap {..} <- liftIO . readTVarIO =<< asks getter
   pure $ HealthCheckResponse $ fst <$> M.lookup service healthMap
 
-watch :: (MonadServer m, MonadState HealthMap m) => HealthCheckRequest -> ConduitT HealthCheckResponse Void m () -> m ()
+watch :: (MonadServer m, MonadReader r m, Has (TVar HealthMap) r) => HealthCheckRequest -> ConduitT HealthCheckResponse Void m () -> m ()
 watch (HealthCheckRequest {..}) sink = do
-  HealthMap {..} <- get
+  HealthMap {..} <- liftIO . readTVarIO =<< asks getter
   (currentStatus, sourceChan) <- case M.lookup service healthMap of
     Nothing -> serverError (ServerError NotFound ("No service called: " <> show service))
     Just x -> pure x
@@ -135,7 +137,7 @@ bChanToConduit listener firstVal = do
       Just x -> do
         C.yield x
 
-healthServer :: (MonadServer m, MonadState HealthMap m) => SingleServerT info Health m _
+healthServer :: (MonadServer m, MonadReader r m, Has (TVar HealthMap) r) => SingleServerT info Health m _
 healthServer =
   singleService
     ( method @"Check" check,

@@ -30,7 +30,7 @@ main =
   Hashicorp.serve $
     Hashicorp.ServeConfig
       (Hashicorp.HandshakeConfig "BASIC_PLUGIN" "hello")
-      (Map.singleton 1 (Hashicorp.Plugin kvServer id))
+      (Map.singleton 1 (Hashicorp.Plugin kvServer))
 
 type TermFrom ty field = Term ty (ty :/: field)
 

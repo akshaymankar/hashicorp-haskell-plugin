@@ -1,7 +1,10 @@
 cradle:
   cabal:
+    - path: "./examples/bidirectional/./Main.hs"
+      component: "hashicorp-plugin-example-bidirectional:exe:hashicorp-plugin-example-bidirectional"
+
     - path: "./examples/kv-plugin/./Main.hs"
-      component: "kv-plugin:exe:grpc-plugin"
+      component: "kv-plugin:exe:kv-plugin"
 
     - path: "./src"
       component: "lib:hashicorp-plugin"

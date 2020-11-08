@@ -1,23 +1,24 @@
 cabal-version:       >=1.10
-name:                kv-plugin
+name:                hashicorp-plugin-example-bidirectional
 version:             0.1.0.0
-data-files:          kv.proto
+data-files:          bidirectional.proto
 author:              Akshay Mankar
 maintainer:          itsakshaymankar@gmail.com
-data-files:          kv.proto
 build-type:          Simple
 
-executable kv-plugin
+executable hashicorp-plugin-example-bidirectional
   main-is:             Main.hs
   build-depends:       base >=4.13 && <4.14
-                     , bytestring >= 0.10
                      , hashicorp-plugin
-                     , mtl
                      , mu-grpc-server == 0.4.0.0
+                     , mu-grpc-client >= 0.4
                      , mu-optics
                      , mu-protobuf == 0.4.0.0
                      , mu-rpc == 0.4.0.0
                      , mu-schema == 0.3.1.1
                      , text
                      , unordered-containers
+                     , data-has
+                     , stm
+                     , mtl
   default-language:    Haskell2010
