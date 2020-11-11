@@ -90,7 +90,7 @@ startStream source _ = do
 
 getClientById :: (MonadReader r m, Has (TVar Connections) r, MonadIO m) => Word32 -> m (Either String GrpcClient)
 getClientById requestedServiceId = do
-  connsTVar :: TVar Connections <- asks getter
+  connsTVar <- asks getter
   connTMVar <- liftIO . atomically $ do
     conns <- readTVar connsTVar
     case Map.lookup requestedServiceId conns of

@@ -18,6 +18,8 @@
 
 module Hashicorp.Plugin where
 
+import Control.Concurrent.Async (race_)
+import Control.Concurrent.MVar (MVar, newEmptyMVar, takeMVar)
 import Control.Concurrent.STM (TVar, newTVarIO)
 import Control.Monad (when)
 import Control.Monad.Except (MonadError)
@@ -37,6 +39,7 @@ import Fcf.Data.List (type (++))
 import GHC.TypeLits (Symbol)
 import qualified GRpc.Health.V1 as Health
 import qualified Hashicorp.GRpc.Broker as Broker
+import qualified Hashicorp.GRpc.Controller as Controller
 import Mu.GRpc.Server (GRpcMessageProtocol (..), GRpcServerHandlers, gRpcServerHandlers, msgProtoBuf)
 import Mu.Rpc (Package, TypeRef)
 import Mu.Server (ServerError, ServerErrorIO, ServerT (NoPackages, Packages), SingleServerT)
@@ -63,14 +66,27 @@ newtype
     (pkgs :: [Package Symbol Symbol Symbol (TypeRef Symbol)])
     (hs :: [[[Type]]]) = Plugin {pluginServer :: PluginServer '[] () pkgs PluginT hs}
 
-newtype PluginT a = PluginT {unPluginT :: ReaderT (TVar Health.HealthMap, TVar Broker.Connections) ServerErrorIO a}
+newtype PluginT a = PluginT
+  { unPluginT ::
+      ReaderT
+        ( TVar Health.HealthMap,
+          TVar Broker.Connections,
+          MVar Controller.ExitSignal
+        )
+        ServerErrorIO
+        a
+  }
   deriving
     ( Functor,
       Applicative,
       Monad,
       MonadIO,
       MonadError ServerError,
-      MonadReader (TVar Health.HealthMap, TVar Broker.Connections)
+      MonadReader
+        ( TVar Health.HealthMap,
+          TVar Broker.Connections,
+          MVar Controller.ExitSignal
+        )
     )
 
 data ServeConfig pkgs hs = ServeConfig
@@ -122,14 +138,18 @@ startServing ::
 startServing sock (Plugin server) = do
   health <- newTVarIO =<< Health.newHealthMap
   broker <- newTVarIO mempty
+  exit <- newEmptyMVar
   flip runReaderT health $ (Health.setServingStatus "plugin" Health.ServingStatusServing)
-  let servers = combineServers Broker.grpcBrokerServer $ combineServers Health.healthServer server
-      handlers = gRpcServerHandlers (flip runReaderT (health, broker) . unPluginT) msgProtoBuf servers
+  let servers =
+        combineServers Controller.grpcControllerServer $
+          combineServers Broker.grpcBrokerServer $
+            combineServers Health.healthServer server
+      handlers = gRpcServerHandlers (flip runReaderT (health, broker, exit) . unPluginT) msgProtoBuf servers
       app =
         Wai.grpcApp
           [uncompressed, gzip]
           handlers
-  runSettingsSocket defaultSettings sock app
+  race_ (takeMVar exit) $ runSettingsSocket defaultSettings sock app
 
 combineServers ::
   SingleServerT () pkg1 m hs1 ->

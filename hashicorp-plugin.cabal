@@ -12,7 +12,7 @@ version:             0.1.0.0
 license-file:        LICENSE
 author:              Akshay Mankar
 maintainer:          itsakshaymankar@gmail.com
-data-files:          health.proto, grpc_broker.proto
+data-files:          health.proto, grpc_broker.proto, grpc_controller.proto
 build-type:          Simple
 extra-source-files:  CHANGELOG.md
 
@@ -45,6 +45,8 @@ library
                      , http2-client
                      , stm
                      , data-has
+                     , async
   exposed-modules:     Hashicorp.Plugin
                      , GRpc.Health.V1
+                     , Hashicorp.GRpc.Controller
                      , Hashicorp.GRpc.Broker
