@@ -3,7 +3,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -21,8 +20,7 @@ module Hashicorp.GRpc.Broker where
 
 import Conduit (ConduitT, Void, (.|))
 import qualified Conduit as C
-import Control.Concurrent (threadDelay)
-import Control.Concurrent.STM (TMVar, TVar, atomically, modifyTVar, newEmptyTMVar, newTMVar, putTMVar, readTMVar, readTVar, readTVarIO, swapTMVar, takeTMVar, tryReadTMVar)
+import Control.Concurrent.STM (TMVar, TVar, atomically, modifyTVar, newEmptyTMVar, newTMVar, putTMVar, readTVar, swapTMVar, takeTMVar, tryReadTMVar)
 import Control.Exception (throwIO)
 import Control.Monad (void)
 import Control.Monad.Except (runExceptT)
@@ -35,13 +33,12 @@ import qualified Data.HashMap.Lazy as Map
 import Data.Text (Text)
 import qualified Data.Text as Text
 import Data.Word (Word32)
-import Debug.Trace (traceShowM)
 import GHC.Generics (Generic)
 import Mu.Quasi.GRpc (grpc)
-import Mu.Schema
+import Mu.Schema (CustomFieldMapping (..), FromSchema, Mapping ((:->)), ToSchema)
 import Mu.Server (MonadServer, SingleServerT, method, singleService)
 import Network.GRPC.Client (Timeout (Timeout), uncompressed)
-import Network.GRPC.Client.Helpers
+import Network.GRPC.Client.Helpers (Address (AddressTCP, AddressUnix), GrpcClient, GrpcClientConfig (GrpcClientConfig), setupGrpcClient)
 import Network.HTTP2.Client (ignoreFallbackHandler)
 
 grpc "GRPCBrokerSchema" id "grpc_broker.proto"

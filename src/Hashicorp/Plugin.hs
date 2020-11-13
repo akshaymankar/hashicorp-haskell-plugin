@@ -12,16 +12,14 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 
 module Hashicorp.Plugin where
 
 import Control.Concurrent.Async (race_)
 import Control.Concurrent.MVar (MVar, newEmptyMVar, takeMVar)
 import Control.Concurrent.STM (TVar, newTVarIO)
-import Control.Monad (when)
+import Control.Monad (unless, when)
 import Control.Monad.Except (MonadError)
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Reader (MonadReader, ReaderT, runReaderT)
@@ -110,8 +108,8 @@ serve ::
   ServeConfig pkgs hs ->
   IO ()
 serve cfg@ServeConfig {..} = do
-  when
-    (not $ isMagicConfigured handshakeConfig)
+  unless
+    (isMagicConfigured handshakeConfig)
     (printErrorAndExit noMagicError (ExitFailure 1))
   providedMagicCookieValue <- OS.lookupEnv (magicCookieKey handshakeConfig)
 
@@ -139,7 +137,7 @@ startServing sock (Plugin server) = do
   health <- newTVarIO =<< Health.newHealthMap
   broker <- newTVarIO mempty
   exit <- newEmptyMVar
-  flip runReaderT health $ (Health.setServingStatus "plugin" Health.ServingStatusServing)
+  flip runReaderT health $ Health.setServingStatus "plugin" Health.ServingStatusServing
   let servers =
         combineServers Controller.grpcControllerServer $
           combineServers Broker.grpcBrokerServer $
@@ -155,7 +153,7 @@ combineServers ::
   SingleServerT () pkg1 m hs1 ->
   ServerT '[] () restPkgs m restHs ->
   ServerT '[] () (pkg1 ': restPkgs) m (Eval (hs1 ++ restHs))
-combineServers (Packages p1 NoPackages) s2 = Packages p1 s2
+combineServers (Packages p1 NoPackages) = Packages p1
 
 coreProtocolVersion :: Integer
 coreProtocolVersion = 1
@@ -222,7 +220,7 @@ matchingVersion plugins versions =
    in (chosenVersion, (Map.!) plugins chosenVersion)
 
 clientVersionsParser :: A.Parser [Version]
-clientVersionsParser = A.decimal `A.sepBy` (A.char ',')
+clientVersionsParser = A.decimal `A.sepBy` A.char ','
 
 printErrorAndExit :: Text -> ExitCode -> IO ()
 printErrorAndExit err code = do

@@ -5,7 +5,6 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE PartialTypeSignatures #-}
@@ -17,7 +16,6 @@
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 {-# OPTIONS_GHC -Wno-partial-type-signatures #-}
 
 module GRpc.Health.V1
@@ -43,19 +41,10 @@ import Data.HashMap.Lazy (HashMap)
 import qualified Data.HashMap.Lazy as M
 import Data.Text (Text)
 import Data.Void (Void)
-import Debug.Trace as Trace
 import GHC.Generics (Generic)
 import Mu.Quasi.GRpc (grpc)
 import Mu.Schema (CustomFieldMapping (..), FromSchema, Mapping ((:->)), ToSchema)
-import Mu.Server
-  ( MonadServer,
-    ServerError (ServerError),
-    ServerErrorCode (NotFound),
-    SingleServerT,
-    method,
-    serverError,
-    singleService,
-  )
+import Mu.Server (MonadServer, ServerError (ServerError), ServerErrorCode (NotFound), SingleServerT, method, serverError, singleService)
 
 grpc "HealthSchema" id "health.proto"
 
@@ -94,7 +83,7 @@ newtype HealthCheckResponse = HealthCheckResponse {status :: Maybe ServingStatus
       FromSchema HealthSchema "HealthCheckResponse"
     )
 
-newtype HealthMap = HealthMap {healthMap :: HashMap Text (ServingStatus, (BroadcastChan In ServingStatus))}
+newtype HealthMap = HealthMap {healthMap :: HashMap Text (ServingStatus, BroadcastChan In ServingStatus)}
 
 newHealthMap :: MonadIO m => m HealthMap
 newHealthMap = do
@@ -114,7 +103,7 @@ check HealthCheckRequest {..} = do
   pure $ HealthCheckResponse $ fst <$> M.lookup service healthMap
 
 watch :: (MonadServer m, MonadReader r m, Has (TVar HealthMap) r) => HealthCheckRequest -> ConduitT HealthCheckResponse Void m () -> m ()
-watch (HealthCheckRequest {..}) sink = do
+watch HealthCheckRequest {..} sink = do
   HealthMap {..} <- liftIO . readTVarIO =<< asks getter
   (currentStatus, sourceChan) <- case M.lookup service healthMap of
     Nothing -> serverError (ServerError NotFound ("No service called: " <> show service))
@@ -127,9 +116,7 @@ watch (HealthCheckRequest {..}) sink = do
 
 bChanToConduit :: MonadIO m => BroadcastChan Out a -> a -> ConduitT () a m ()
 bChanToConduit listener firstVal = do
-  Trace.traceM "Before serving first value"
   C.yield firstVal
-  Trace.traceM "First value served"
   forever $ do
     maybeVal <- readBChan listener
     case maybeVal of
