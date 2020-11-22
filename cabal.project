@@ -30,11 +30,11 @@ source-repository-package
   location: https://github.com/akshaymankar/tracing.git
   tag: ef4d6337540603482afa89aa4f067574e089bf46
 
--- Forked to support unix sockets
+-- Unreleased version to support unix sockets
 source-repository-package
   type: git
-  location: https://github.com/akshaymankar/http2-grpc-haskell
-  tag: de162d6b90e0c74f0cfa4265cd74eabded888058
+  location: https://github.com/haskell-grpc-native/http2-grpc-haskell/
+  tag: fcc9e6f76df0ee37313b10697a3868552555cedd
   subdir: http2-client-grpc
 
 packages: ./hashicorp-plugin.cabal ./examples/kv-plugin/kv-plugin.cabal ./examples/bidirectional/hashicorp-plugin-example-bidirectional.cabal
