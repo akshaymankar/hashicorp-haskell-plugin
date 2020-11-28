@@ -17,13 +17,6 @@ source-repository-package
   tag: 2ef33f6035161318fe603070b84ee648e13508a0
   subdir: core/rpc
 
--- Forked to support unsigned ints (https://github.com/higherkindness/mu-haskell/pull/246)
-source-repository-package
-  type: git
-  location: https://github.com/akshaymankar/mu-haskell
-  tag: e2b2ab5bfda1c4951c5dc3b5093f388eb6feeed8
-  subdir: adapter/protobuf
-
 -- Forked to upgrade deps (https://github.com/mtth/tracing/pull/5)
 source-repository-package
   type: git

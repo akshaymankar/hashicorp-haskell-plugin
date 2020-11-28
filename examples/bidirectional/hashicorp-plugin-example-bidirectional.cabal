@@ -13,7 +13,7 @@ executable hashicorp-plugin-example-bidirectional
                      , mu-grpc-server >= 0.4.0.0
                      , mu-grpc-client >= 0.4
                      , mu-optics
-                     , mu-protobuf >= 0.4
+                     , mu-protobuf >= 0.4.0.3
                      , mu-rpc >= 0.4
                      , mu-schema >= 0.3.1.1
                      , text

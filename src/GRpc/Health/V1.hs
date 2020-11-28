@@ -71,8 +71,8 @@ data ServingStatus
   | ServingStatusServiceUnknown
   deriving (Show, Eq, Generic)
   deriving
-    (ToSchema HealthSchema "ServingStatus", FromSchema HealthSchema "ServingStatus")
-    via (CustomFieldMapping "ServingStatus" ServingStatusFieldMapping ServingStatus)
+    (ToSchema HealthSchema "HealthCheckResponse.ServingStatus", FromSchema HealthSchema "HealthCheckResponse.ServingStatus")
+    via (CustomFieldMapping "HealthCheckResponse.ServingStatus" ServingStatusFieldMapping ServingStatus)
 
 newtype HealthCheckResponse = HealthCheckResponse {status :: Maybe ServingStatus}
   deriving
