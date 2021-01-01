@@ -8,7 +8,7 @@ build-type:          Simple
 
 executable hashicorp-plugin-example-bidirectional
   main-is:             Main.hs
-  build-depends:       base >=4.13 && <4.14
+  build-depends:       base >=4.13
                      , hashicorp-plugin
                      , mu-grpc-server >= 0.4.0.0
                      , mu-grpc-client >= 0.4

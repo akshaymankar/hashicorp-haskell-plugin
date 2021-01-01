@@ -8,14 +8,28 @@ source-repository-package
 source-repository-package
   type: git
   location: https://github.com/akshaymankar/mu-haskell
-  tag: 2ef33f6035161318fe603070b84ee648e13508a0
+  tag: a8ebc605ee9d4d2b58443965df649aba0f04dd97
   subdir: grpc/server
 
 source-repository-package
   type: git
   location: https://github.com/akshaymankar/mu-haskell
-  tag: 2ef33f6035161318fe603070b84ee648e13508a0
+  tag: a8ebc605ee9d4d2b58443965df649aba0f04dd97
   subdir: core/rpc
+
+-- Unreleased version to support maps in protobuf
+source-repository-package
+  type: git
+  location: https://github.com/higherkindness/mu-haskell
+  tag: 4cd6560d16bddee9ef79cbfce4a28b3b8922d29f
+  subdir: adapter/protobuf
+
+-- Unreleased version to support GHC 8.10
+source-repository-package
+  type: git
+  location: https://github.com/higherkindness/mu-haskell
+  tag: 4cd6560d16bddee9ef79cbfce4a28b3b8922d29f
+  subdir: core/schema
 
 -- Forked to upgrade deps (https://github.com/mtth/tracing/pull/5)
 source-repository-package

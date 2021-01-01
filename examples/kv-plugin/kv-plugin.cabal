@@ -9,7 +9,7 @@ build-type:          Simple
 
 executable kv-plugin
   main-is:             Main.hs
-  build-depends:       base >=4.13 && <4.14
+  build-depends:       base >=4.13
                      , bytestring >= 0.10
                      , hashicorp-plugin
                      , mtl
