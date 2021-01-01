@@ -8,3 +8,9 @@ cradle:
 
     - path: "./src"
       component: "lib:hashicorp-plugin"
+
+    - path: "./waypoint-plugin-sdk/src"
+      component: "lib:waypoint-plugin-sdk"
+
+    - path: "./waypoint-plugin-sdk/dummy-plugin/Main.hs"
+      component: "waypoint-plugin-sdk:exe:waypoint-plugin-dummy"

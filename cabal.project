@@ -44,4 +44,4 @@ source-repository-package
   tag: fcc9e6f76df0ee37313b10697a3868552555cedd
   subdir: http2-client-grpc
 
-packages: ./hashicorp-plugin.cabal ./examples/kv-plugin/kv-plugin.cabal ./examples/bidirectional/hashicorp-plugin-example-bidirectional.cabal
+packages: ./hashicorp-plugin.cabal ./waypoint-plugin-sdk ./examples/*
