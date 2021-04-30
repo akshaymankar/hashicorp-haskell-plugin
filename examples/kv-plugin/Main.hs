@@ -18,11 +18,11 @@ import qualified Data.ByteString as BS
 import qualified Data.HashMap.Lazy as Map
 import qualified Data.Text as Text
 import qualified Hashicorp.Plugin as Hashicorp
+import Mu.GRpc.Server (MultipleServers (..))
 import Mu.Quasi.GRpc (grpc)
 import Mu.Schema (Term, (:/:))
 import Mu.Schema.Optics (record, record1, (^.))
 import Mu.Server (MonadServer, ServerT, method, singleService)
-import Mu.GRpc.Server (MultipleServers(..))
 
 grpc "KVSchema" id "kv.proto"
 

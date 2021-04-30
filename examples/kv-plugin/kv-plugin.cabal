@@ -9,6 +9,7 @@ build-type:          Simple
 
 executable kv-plugin
   main-is:             Main.hs
+  ghc-options:         -Wall
   build-depends:       base >=4.13
                      , bytestring >= 0.10
                      , hashicorp-plugin

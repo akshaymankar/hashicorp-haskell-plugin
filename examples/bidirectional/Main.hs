@@ -66,7 +66,7 @@ putKV req = do
   client <- either (serverError . ServerError Invalid) pure =<< Broker.getClientById (req ^. #add_server)
   sumResponse <- callSum client (record (stored, req ^. #value))
   case sumResponse of
-    GRpcOk sum -> fmap record . liftIO $ writeFile f (show (sum ^. #r))
+    GRpcOk sum' -> fmap record . liftIO $ writeFile f (show (sum' ^. #r))
     err -> serverError $ ServerError Invalid $ show err
 
 callSum :: (MonadIO m) => GrpcClient -> SumRequest -> m (GRpcReply SumResponse)

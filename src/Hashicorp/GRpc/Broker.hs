@@ -43,7 +43,7 @@ import Network.HTTP2.Client (ignoreFallbackHandler)
 
 grpc "GRPCBrokerSchema" id "grpc_broker.proto"
 
-type ConnInfoFieldMapping = '["serviceId" :-> "service_id"]
+type ConnInfoFieldMapping = '["serviceId" ':-> "service_id"]
 
 data ConnInfo = ConnInfo
   { serviceId :: Word32,

@@ -24,7 +24,7 @@ module GRpc.Health.V1
     setServingStatus,
     healthServer,
     ServingStatus (..),
-    Health (..),
+    Health,
   )
 where
 
@@ -58,10 +58,10 @@ newtype HealthCheckRequest = HealthCheckRequest {service :: Text}
     )
 
 type ServingStatusFieldMapping =
-  '[ "ServingStatusUnknown" :-> "UNKNOWN",
-     "ServingStatusServing" :-> "SERVING",
-     "ServingStatusNotServing" :-> "NOT_SERVING",
-     "ServingStatusServiceUnknown" :-> "SERVICE_UNKNOWN"
+  '[ "ServingStatusUnknown" ':-> "UNKNOWN",
+     "ServingStatusServing" ':-> "SERVING",
+     "ServingStatusNotServing" ':-> "NOT_SERVING",
+     "ServingStatusServiceUnknown" ':-> "SERVICE_UNKNOWN"
    ]
 
 data ServingStatus
