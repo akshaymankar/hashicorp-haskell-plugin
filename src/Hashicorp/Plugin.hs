@@ -27,20 +27,15 @@ import qualified Data.Attoparsec.Text as A
 import Data.HashMap.Lazy (HashMap)
 import qualified Data.HashMap.Lazy as Map
 import qualified Data.HashSet as Set
-import Data.Kind (Type)
 import qualified Data.List as List
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified Data.Text.IO as Text
-import Fcf (Eval)
-import Fcf.Data.List (type (++))
-import GHC.TypeLits (Symbol)
 import qualified GRpc.Health.V1 as Health
 import qualified Hashicorp.GRpc.Broker as Broker
 import qualified Hashicorp.GRpc.Controller as Controller
-import Mu.GRpc.Server (GRpcMessageProtocol (..), GRpcServerHandlers, gRpcServerHandlers, msgProtoBuf)
-import Mu.Rpc (Package, TypeRef)
-import Mu.Server (ServerError, ServerErrorIO, ServerT (NoPackages, Packages), SingleServerT)
+import Mu.GRpc.Server (GRpcMessageProtocol (..), MultipleServers (MSOneMore), gRpcMultipleServerHandlers, msgProtoBuf)
+import Mu.Server (ServerError, ServerErrorIO) -- ServerT (NoPackages, Packages),
 import Network.GRPC.HTTP2.Encoding (gzip, uncompressed)
 import qualified Network.GRPC.Server as Wai
 import qualified Network.Socket as Network
@@ -57,12 +52,7 @@ data HandshakeConfig = HandshakeConfig
   }
   deriving (Show, Eq)
 
-type PluginServer = ServerT
-
-newtype
-  Plugin
-    (pkgs :: [Package Symbol Symbol Symbol (TypeRef Symbol)])
-    (hs :: [[[Type]]]) = Plugin {pluginServer :: PluginServer '[] () pkgs PluginT hs}
+newtype Plugin = Plugin (MultipleServers 'MsgProtoBuf PluginT)
 
 newtype PluginT a = PluginT
   { unPluginT ::
@@ -87,9 +77,17 @@ newtype PluginT a = PluginT
         )
     )
 
-data ServeConfig pkgs hs = ServeConfig
+runPluginT ::
+  TVar Health.HealthMap ->
+  TVar Broker.Connections ->
+  MVar Controller.ExitSignal ->
+  PluginT a ->
+  ServerErrorIO a
+runPluginT health broker exit = flip runReaderT (health, broker, exit) . unPluginT
+
+data ServeConfig = ServeConfig
   { handshakeConfig :: HandshakeConfig,
-    versionedPluginSet :: HashMap Version (Plugin pkgs hs)
+    versionedPluginSet :: HashMap Version Plugin
   }
 
 data Protocol
@@ -103,10 +101,7 @@ instance Show Protocol where
 
 type Version = Int
 
-serve ::
-  (GRpcServerHandlers pkgs MsgProtoBuf PluginT '[] hs) =>
-  ServeConfig pkgs hs ->
-  IO ()
+serve :: ServeConfig -> IO ()
 serve cfg@ServeConfig {..} = do
   unless
     (isMagicConfigured handshakeConfig)
@@ -127,33 +122,19 @@ serve cfg@ServeConfig {..} = do
 isMagicConfigured :: HandshakeConfig -> Bool
 isMagicConfigured HandshakeConfig {..} = not (null magicCookieKey || null magicCookieValue)
 
-startServing ::
-  forall pkgs hs.
-  (GRpcServerHandlers pkgs MsgProtoBuf PluginT '[] hs) =>
-  Network.Socket ->
-  Plugin pkgs hs ->
-  IO ()
-startServing sock (Plugin server) = do
+startServing :: Network.Socket -> Plugin -> IO ()
+startServing sock (Plugin pluginServers) = do
   health <- newTVarIO =<< Health.newHealthMap
   broker <- newTVarIO mempty
   exit <- newEmptyMVar
   flip runReaderT health $ Health.setServingStatus "plugin" Health.ServingStatusServing
   let servers =
-        combineServers Controller.grpcControllerServer $
-          combineServers Broker.grpcBrokerServer $
-            combineServers Health.healthServer server
-      handlers = gRpcServerHandlers (flip runReaderT (health, broker, exit) . unPluginT) msgProtoBuf servers
-      app =
-        Wai.grpcApp
-          [uncompressed, gzip]
-          handlers
+        MSOneMore Controller.grpcControllerServer $
+          MSOneMore Broker.grpcBrokerServer $
+            MSOneMore Health.healthServer pluginServers
+      handlers = gRpcMultipleServerHandlers msgProtoBuf (runPluginT health broker exit) servers
+      app = Wai.grpcApp [uncompressed, gzip] handlers
   race_ (takeMVar exit) $ runSettingsSocket defaultSettings sock app
-
-combineServers ::
-  SingleServerT () pkg1 m hs1 ->
-  ServerT '[] () restPkgs m restHs ->
-  ServerT '[] () (pkg1 ': restPkgs) m (Eval (hs1 ++ restHs))
-combineServers (Packages p1 NoPackages) = Packages p1
 
 coreProtocolVersion :: Integer
 coreProtocolVersion = 1
@@ -197,7 +178,7 @@ listenUnix = do
   Network.listen sock 5
   pure sock
 
-selectPlugins :: ServeConfig s hs -> IO (Version, Plugin s hs)
+selectPlugins :: ServeConfig -> IO (Version, Plugin)
 selectPlugins ServeConfig {..} = matchingVersion versionedPluginSet <$> clientVersions
 
 clientVersions :: IO [Version]

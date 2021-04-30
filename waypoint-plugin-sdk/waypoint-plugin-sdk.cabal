@@ -29,6 +29,7 @@ library
                      , mu-protobuf
                      , mu-rpc
                      , mu-schema
+                     , mu-grpc-server
                      , text
                      , unordered-containers
 

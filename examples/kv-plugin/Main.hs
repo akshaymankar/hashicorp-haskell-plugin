@@ -22,6 +22,7 @@ import Mu.Quasi.GRpc (grpc)
 import Mu.Schema (Term, (:/:))
 import Mu.Schema.Optics (record, record1, (^.))
 import Mu.Server (MonadServer, ServerT, method, singleService)
+import Mu.GRpc.Server (MultipleServers(..))
 
 grpc "KVSchema" id "kv.proto"
 
@@ -30,7 +31,7 @@ main =
   Hashicorp.serve $
     Hashicorp.ServeConfig
       (Hashicorp.HandshakeConfig "BASIC_PLUGIN" "hello")
-      (Map.singleton 1 (Hashicorp.Plugin kvServer))
+      (Map.singleton 1 (Hashicorp.Plugin $ MSOneMore kvServer MSEnd))
 
 type TermFrom ty field = Term ty (ty :/: field)
 
@@ -58,7 +59,7 @@ putKV req = do
 filename :: Text.Text -> FilePath
 filename = Text.unpack . ("kv_" <>)
 
-kvServer :: (MonadServer m, MonadIO m) => ServerT '[] i '[KV] m _
+kvServer :: (MonadServer m, MonadIO m) => ServerT '[] i KV m _
 kvServer =
   singleService
     ( method @"Get" getKV,

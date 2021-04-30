@@ -4,32 +4,12 @@ source-repository-package
   tag: 43e81a5c738128214c585dfb178225e4f5a644e9
   subdir: http2-grpc-proto3-wire
 
--- Forked to support multiple packages in one server
+-- For with support for MultipleServers and few more fixes from upstream HEAD
 source-repository-package
   type: git
   location: https://github.com/akshaymankar/mu-haskell
-  tag: a8ebc605ee9d4d2b58443965df649aba0f04dd97
-  subdir: grpc/server
-
-source-repository-package
-  type: git
-  location: https://github.com/akshaymankar/mu-haskell
-  tag: a8ebc605ee9d4d2b58443965df649aba0f04dd97
-  subdir: core/rpc
-
--- Unreleased version to support maps in protobuf
-source-repository-package
-  type: git
-  location: https://github.com/higherkindness/mu-haskell
-  tag: 4cd6560d16bddee9ef79cbfce4a28b3b8922d29f
-  subdir: adapter/protobuf
-
--- Unreleased version to support GHC 8.10
-source-repository-package
-  type: git
-  location: https://github.com/higherkindness/mu-haskell
-  tag: 4cd6560d16bddee9ef79cbfce4a28b3b8922d29f
-  subdir: core/schema
+  tag: 1c1559b7facd2fe708dcdd76bbf745851a136e66
+  subdir: core/rpc core/schema grpc/server adapter/protobuf
 
 -- Forked to upgrade deps (https://github.com/mtth/tracing/pull/5)
 source-repository-package

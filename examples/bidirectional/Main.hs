@@ -23,7 +23,7 @@ import qualified Data.Text as Text
 import qualified Hashicorp.GRpc.Broker as Broker
 import qualified Hashicorp.Plugin as Plugin
 import Mu.GRpc.Client.TyApps (GRpcReply (..), GrpcClient, gRpcCall)
-import Mu.GRpc.Server (GRpcMessageProtocol (MsgProtoBuf))
+import Mu.GRpc.Server (GRpcMessageProtocol (MsgProtoBuf), MultipleServers (..))
 import Mu.Quasi.GRpc (grpc)
 import Mu.Schema (Term, (:/:))
 import Mu.Schema.Optics (record, record1, (^.))
@@ -37,7 +37,7 @@ main =
   Plugin.serve $
     Plugin.ServeConfig
       (Plugin.HandshakeConfig "BASIC_PLUGIN" "hello")
-      (Map.singleton 1 (Plugin.Plugin kvServer))
+      (Map.singleton 1 (Plugin.Plugin $ MSOneMore kvServer MSEnd))
 
 type TermFrom ty field = Term ty (ty :/: field)
 
@@ -75,7 +75,7 @@ callSum c r = liftIO $ gRpcCall @'MsgProtoBuf @AddHelper @"AddHelper" @"Sum" c r
 filename :: Text.Text -> FilePath
 filename = Text.unpack . ("kv_" <>)
 
-kvServer :: (MonadServer m, MonadIO m, MonadReader r m, Has (TVar Broker.Connections) r) => ServerT '[] i '[Counter] m _
+kvServer :: (MonadServer m, MonadIO m, MonadReader r m, Has (TVar Broker.Connections) r) => ServerT '[] i Counter m _
 kvServer =
   singleService
     ( method @"Get" getKV,

@@ -74,7 +74,7 @@ data ServingStatus
     (ToSchema HealthSchema "HealthCheckResponse.ServingStatus", FromSchema HealthSchema "HealthCheckResponse.ServingStatus")
     via (CustomFieldMapping "HealthCheckResponse.ServingStatus" ServingStatusFieldMapping ServingStatus)
 
-newtype HealthCheckResponse = HealthCheckResponse {status :: Maybe ServingStatus}
+newtype HealthCheckResponse = HealthCheckResponse {status :: ServingStatus}
   deriving
     ( Show,
       Eq,
@@ -100,7 +100,7 @@ setServingStatus name newStatus = do
 check :: (MonadServer m, MonadReader r m, Has (TVar HealthMap) r) => HealthCheckRequest -> m HealthCheckResponse
 check HealthCheckRequest {..} = do
   HealthMap {..} <- liftIO . readTVarIO =<< asks getter
-  pure $ HealthCheckResponse $ fst <$> M.lookup service healthMap
+  pure . HealthCheckResponse $ maybe ServingStatusServiceUnknown fst $ M.lookup service healthMap
 
 watch :: (MonadServer m, MonadReader r m, Has (TVar HealthMap) r) => HealthCheckRequest -> ConduitT HealthCheckResponse Void m () -> m ()
 watch HealthCheckRequest {..} sink = do
@@ -111,7 +111,7 @@ watch HealthCheckRequest {..} sink = do
   listener <- newBChanListener sourceChan
   C.runConduit $
     bChanToConduit listener currentStatus
-      .| C.map (HealthCheckResponse . Just)
+      .| C.map HealthCheckResponse
       .| sink
 
 bChanToConduit :: MonadIO m => BroadcastChan Out a -> a -> ConduitT () a m ()
