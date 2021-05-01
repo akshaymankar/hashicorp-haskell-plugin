@@ -20,6 +20,6 @@
    ```
 1. Retrieve the thing. Run this from `go-plugin/examples/grpc/`
    ```bash
-   KV_PLUGIN=~/.cabal/bin/kv-plugin go run . get hello
+   COUNTER_PLUGIN=~/.cabal/bin/hashicorp-plugin-example-bidirectional go run . get hello
    ```
    This should return `5`

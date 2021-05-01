@@ -1,4 +1,40 @@
 {
+    "hashicorp-go-plugin": {
+        "branch": "master",
+        "description": "Golang plugin system over RPC.",
+        "homepage": null,
+        "owner": "hashicorp",
+        "repo": "go-plugin",
+        "rev": "044aadd925bf9f027cb301b2af9bc6b60775dd22",
+        "sha256": "1lzfs92xks64591s110v669mch5fn51b1b1jgp4nd0rh9qw9h5cl",
+        "type": "tarball",
+        "url": "https://github.com/hashicorp/go-plugin/archive/044aadd925bf9f027cb301b2af9bc6b60775dd22.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "http2-grpc-haskell": {
+        "branch": "bump-proto3-wire",
+        "description": "gRPC over HTTP/2 for Haskell, client and server",
+        "homepage": null,
+        "owner": "akshaymankar",
+        "repo": "http2-grpc-haskell",
+        "rev": "d673997b35fb8bb07695a18bbfcd5e0616425b67",
+        "sha256": "0v7d7igllalpa26nj35b2mal4ak8k6j0p41bdsn1mkz2bzi136lj",
+        "type": "tarball",
+        "url": "https://github.com/akshaymankar/http2-grpc-haskell/archive/d673997b35fb8bb07695a18bbfcd5e0616425b67.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "mu-haskell": {
+        "branch": "multiplex-grpc",
+        "description": "Mu (μ) is a purely functional framework for building micro services.",
+        "homepage": "http://higherkindness.io/mu-haskell/",
+        "owner": "akshaymankar",
+        "repo": "mu-haskell",
+        "rev": "1c1559b7facd2fe708dcdd76bbf745851a136e66",
+        "sha256": "14wj7vmi7r09m6hqcbgw8xbn028bj0fyf9nrnj6d00m85sgs1v8s",
+        "type": "tarball",
+        "url": "https://github.com/akshaymankar/mu-haskell/archive/1c1559b7facd2fe708dcdd76bbf745851a136e66.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "niv": {
         "branch": "master",
         "description": "Easy dependency management for Nix projects",

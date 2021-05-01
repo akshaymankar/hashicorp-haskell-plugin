@@ -2,6 +2,12 @@
 
 ## How to test
 
+### With nix
+
+Run `test.sh`
+
+### Without nix
+
 1. Get the `go-plugin` repo
    ```bash
    git clone https://github.com/hashicorp/go-plugin
