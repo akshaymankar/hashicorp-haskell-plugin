@@ -6,7 +6,7 @@ cradle:
     - path: "./examples/kv-plugin/./Main.hs"
       component: "kv-plugin:exe:kv-plugin"
 
-    - path: "./src"
+    - path: "./hashicorp-plugin/src"
       component: "lib:hashicorp-plugin"
 
     - path: "./waypoint-plugin-sdk/src"

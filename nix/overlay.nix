@@ -12,7 +12,7 @@ self: super: {
       proto3-wire = hself.callPackage ./haskell/proto3-wire.nix {};
       network = hself.network_3_1_2_1;
 
-      hashicorp-plugin = hself.callPackage ../default.nix {};
+      hashicorp-plugin = hself.callPackage ../hashicorp-plugin/default.nix {};
       hashicorp-plugin-example-kv-plugin = hself.callPackage ../examples/kv-plugin/default.nix {};
       hashicorp-plugin-example-bidirectional = hself.callPackage ../examples/bidirectional/default.nix {};
     };

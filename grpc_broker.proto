@@ -1,14 +1,1 @@
-// Copied from https://github.com/hashicorp/go-plugin/blob/4c2f0639bfb69d99f6f21b350e87639b4df32df2/internal/plugin/grpc_broker.proto
-syntax = "proto3";
-package plugin;
-option go_package = "plugin";
-
-message ConnInfo {
-    uint32 service_id = 1;
-    string network = 2;
-    string address = 3;
-}
-
-service GRPCBroker {
-    rpc StartStream(stream ConnInfo) returns (stream ConnInfo);
-}
+hashicorp-plugin/grpc_broker.proto
