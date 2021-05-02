@@ -11,5 +11,6 @@ pkgs.buildEnv {
     pkgs.haskellPackages.cabal-install
     pkgs.haskell-language-server
     pkgs.haskellPackages.implicit-hie
+    pkgs.cabal2nix
   ];
 }

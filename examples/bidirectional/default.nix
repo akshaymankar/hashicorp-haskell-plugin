@@ -1,6 +1,6 @@
-{ mkDerivation, base, data-has, hashicorp-plugin, mtl
+{ mkDerivation, base, data-has, hashicorp-plugin, lib, mtl
 , mu-grpc-client, mu-grpc-server, mu-optics, mu-protobuf, mu-rpc
-, mu-schema, stdenv, stm, text, unordered-containers
+, mu-schema, stm, text, unordered-containers
 }:
 mkDerivation {
   pname = "hashicorp-plugin-example-bidirectional";
@@ -15,5 +15,5 @@ mkDerivation {
     unordered-containers
   ];
   license = "unknown";
-  hydraPlatforms = stdenv.lib.platforms.none;
+  hydraPlatforms = lib.platforms.none;
 }

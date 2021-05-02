@@ -1,6 +1,6 @@
-{ mkDerivation, base, bytestring, hashicorp-plugin, mtl
-, mu-grpc-server, mu-optics, mu-protobuf, mu-rpc, mu-schema, stdenv
-, text, unordered-containers
+{ mkDerivation, base, bytestring, hashicorp-plugin, lib, mtl
+, mu-grpc-server, mu-optics, mu-protobuf, mu-rpc, mu-schema, text
+, unordered-containers
 }:
 mkDerivation {
   pname = "kv-plugin";
@@ -14,5 +14,5 @@ mkDerivation {
     mu-protobuf mu-rpc mu-schema text unordered-containers
   ];
   license = "unknown";
-  hydraPlatforms = stdenv.lib.platforms.none;
+  hydraPlatforms = lib.platforms.none;
 }

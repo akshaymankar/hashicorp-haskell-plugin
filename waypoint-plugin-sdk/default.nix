@@ -1,6 +1,6 @@
-{ mkDerivation, base, bytestring, containers, hashicorp-plugin
-, mu-grpc-server, mu-optics, mu-protobuf, mu-rpc, mu-schema, stdenv
-, text, unordered-containers
+{ mkDerivation, base, bytestring, containers, hashicorp-plugin, lib
+, mu-grpc-server, mu-optics, mu-protobuf, mu-rpc, mu-schema, text
+, unordered-containers
 }:
 mkDerivation {
   pname = "waypoint-plugin-sdk";
@@ -14,5 +14,5 @@ mkDerivation {
   ];
   executableHaskellDepends = [ base hashicorp-plugin ];
   license = "unknown";
-  hydraPlatforms = stdenv.lib.platforms.none;
+  hydraPlatforms = lib.platforms.none;
 }
