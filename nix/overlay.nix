@@ -15,6 +15,8 @@ self: super: {
       hashicorp-plugin = hself.callPackage ../hashicorp-plugin/default.nix {};
       hashicorp-plugin-example-kv-plugin = hself.callPackage ../examples/kv-plugin/default.nix {};
       hashicorp-plugin-example-bidirectional = hself.callPackage ../examples/bidirectional/default.nix {};
+      waypoint-plugin-sdk = hself.callPackage ../waypoint/waypoint-plugin-sdk/default.nix {};
+      waypoint-plugin-dummy = hself.callPackage ../waypoint/waypoint-plugin-dummy/default.nix {};
     };
   });
   go-plugin-example-grpc = self.callPackage ./go-plugin-example-grpc.nix {};

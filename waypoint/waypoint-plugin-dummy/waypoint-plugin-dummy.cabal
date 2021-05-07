@@ -1,0 +1,13 @@
+cabal-version:      2.4
+name:               waypoint-plugin-dummy
+version:            0.1.0.0
+author:             Akshay Mankar
+maintainer:         itsakshaymankar@gmail.com
+
+executable waypoint-plugin-dummy
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    default-language: Haskell2010
+    build-depends:    base
+                    , hashicorp-plugin
+                    , waypoint-plugin-sdk

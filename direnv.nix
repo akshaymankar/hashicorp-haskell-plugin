@@ -12,5 +12,7 @@ pkgs.buildEnv {
     pkgs.haskell-language-server
     pkgs.haskellPackages.implicit-hie
     pkgs.cabal2nix
+    pkgs.waypoint
+    pkgs.shellcheck
   ];
 }

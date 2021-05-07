@@ -27,6 +27,8 @@ import GHC.TypeLits (symbolVal)
 import Mu.Adapter.ProtoBuf (IsProtoSchema, parseProtoViaSchema)
 import Mu.Schema (FromSchema)
 import Mu.Schema.Class (ToSchema)
+import Optics.Core (view)
+import Optics.Getter (Getter, to)
 import Waypoint.Any (Any (..))
 import Waypoint.FuncSpec
   ( FuncSpec (FuncSpec, args),
@@ -212,6 +214,62 @@ inputTypeToFuncSpecArg = \case
   InputTypeTerminalUI -> FuncSpecValue "" uiProtobufType Nothing
   InputTypeLabelSet -> FuncSpecValue "" labelSetProtobufType Nothing
   InputTypeLogger -> FuncSpecValue "" loggerProtobufType Nothing
+
+-- * Getters
+
+class HasSource a where
+  source :: Getter a Source
+
+instance (HasSource (Inputs ts)) => HasSource (Inputs (t ': ts)) where
+  source = to (\(_ :* rest) -> view source rest)
+
+instance {-# OVERLAPPING #-} HasSource (Inputs ('InputTypeSource ': ts)) where
+  source = to (\(InputSource s :* Nil) -> s)
+
+class HasJobInfo a where
+  jobInfo :: Getter a JobInfo
+
+instance HasJobInfo (Inputs ts) => HasJobInfo (Inputs (t ': ts)) where
+  jobInfo = to (\(_ :* rest) -> view jobInfo rest)
+
+instance {-# OVERLAPPING #-} HasJobInfo (Inputs ('InputTypeJobInfo ': ts)) where
+  jobInfo = to (\(InputJobInfo s :* Nil) -> s)
+
+class HasApp a where
+  app_ :: Getter a App
+
+instance HasApp (Inputs ts) => HasApp (Inputs (t ': ts)) where
+  app_ = to (\(_ :* rest) -> view app_ rest)
+
+instance {-# OVERLAPPING #-} HasApp (Inputs ('InputTypeApp ': ts)) where
+  app_ = to (\(InputApp s :* Nil) -> s)
+
+class HasTerminalUI a where
+  terminalUI :: Getter a TerminalUI
+
+instance HasTerminalUI (Inputs ts) => HasTerminalUI (Inputs (t ': ts)) where
+  terminalUI = to (\(_ :* rest) -> view terminalUI rest)
+
+instance {-# OVERLAPPING #-} HasTerminalUI (Inputs ('InputTypeTerminalUI ': ts)) where
+  terminalUI = to (\(InputTerminalUI s :* Nil) -> s)
+
+class HasLabelSet a where
+  labelSet :: Getter a LabelSet
+
+instance HasLabelSet (Inputs ts) => HasLabelSet (Inputs (t ': ts)) where
+  labelSet = to (\(_ :* rest) -> view labelSet rest)
+
+instance {-# OVERLAPPING #-} HasLabelSet (Inputs ('InputTypeLabelSet ': ts)) where
+  labelSet = to (\(InputLabelSet s :* Nil) -> s)
+
+class HasLogger a where
+  logger :: Getter a Logger
+
+instance HasLogger (Inputs ts) => HasLogger (Inputs (t ': ts)) where
+  logger = to (\(_ :* rest) -> view logger rest)
+
+instance {-# OVERLAPPING #-} HasLogger (Inputs ('InputTypeLogger ': ts)) where
+  logger = to (\(InputLogger s :* Nil) -> s)
 
 -- * Constants
 

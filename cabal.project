@@ -30,4 +30,4 @@ source-repository-package
 --   location: https://github.com/swamp-agr/cryptohash-md5
 --   tag: fc934ba2cd9c67ec95c8e2215d00afbd131a059b
 
-packages: ./hashicorp-plugin ./waypoint-plugin-sdk ./examples/*
+packages: ./hashicorp-plugin ./waypoint/waypoint-plugin-sdk ./waypoint/waypoint-plugin-dummy/ ./examples/*
