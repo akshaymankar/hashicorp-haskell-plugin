@@ -20,7 +20,7 @@ cp "$source_dir/waypoint.hcl" "$test_dir/waypoint.hcl"
 dummy_bin=$(which waypoint-plugin-dummy)
 cat <<EOF >"$test_dir/waypoint-plugin-dummy"
 #!/usr/bin/env bash
-"$dummy_bin" | tee "$test_dir/build-log"
+"$dummy_bin" 2>$test_dir/build-log.stderr | tee "$test_dir/build-log.stdout"
 EOF
 chmod +x "$test_dir/waypoint-plugin-dummy"
 
@@ -33,5 +33,7 @@ pushd "$test_dir" >/dev/null
   waypoint build
   echo "Build successful"
 popd >/dev/null
-echo "Build stdout"
-cat "$test_dir/build-log"
+echo "Build stdout:"
+cat "$test_dir/build-log.stdout"
+echo "Build stderr:"
+cat "$test_dir/build-log.stderr"
