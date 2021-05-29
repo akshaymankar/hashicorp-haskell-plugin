@@ -9,27 +9,35 @@ build-type:          Simple
 library
   default-language:    Haskell2010
   hs-source-dirs:      src
-  exposed-modules:     Waypoint.Any
-                     , Waypoint.Auth
+  exposed-modules:     Waypoint.Auth
                      , Waypoint.Build
                      , Waypoint.Config
                      , Waypoint.FuncSpec
+                     , Waypoint.GoogleProto
                      , Waypoint.Inputs
                      , Waypoint.Map
                      , Waypoint.Misc
                      , Waypoint.Plugin
                      , Waypoint.Proto
                      , Waypoint.ProtoStruct
+                     , Waypoint.TerminalUI
+                     , Waypoint.TerminalUI.Types
   ghc-options:         -Wall
   build-depends:       base >=4.13 && <5
                      , bytestring
+                     , conduit
                      , containers
+                     , data-has
                      , hashicorp-plugin
+                     , generics-sop
+                     , mtl
+                     , mu-grpc-client
+                     , mu-grpc-server
                      , mu-optics
                      , mu-protobuf
                      , mu-rpc
                      , mu-schema
-                     , mu-grpc-server
                      , optics-core
+                     , stm
                      , text
                      , unordered-containers

@@ -1,4 +1,6 @@
-{ mkDerivation, base, hashicorp-plugin, lib, waypoint-plugin-sdk }:
+{ mkDerivation, base, conduit, hashicorp-plugin, lib
+, waypoint-plugin-sdk
+}:
 mkDerivation {
   pname = "waypoint-plugin-dummy";
   version = "0.1.0.0";
@@ -6,7 +8,7 @@ mkDerivation {
   isLibrary = false;
   isExecutable = true;
   executableHaskellDepends = [
-    base hashicorp-plugin waypoint-plugin-sdk
+    base conduit hashicorp-plugin waypoint-plugin-sdk
   ];
   license = "unknown";
   hydraPlatforms = lib.platforms.none;

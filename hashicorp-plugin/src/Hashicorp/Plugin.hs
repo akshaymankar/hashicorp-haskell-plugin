@@ -34,10 +34,8 @@ import qualified Data.Text.IO as Text
 import qualified GRpc.Health.V1 as Health
 import qualified Hashicorp.GRpc.Broker as Broker
 import qualified Hashicorp.GRpc.Controller as Controller
-import Mu.GRpc.Server (GRpcMessageProtocol (..), MultipleServers (MSOneMore), gRpcMultipleServerHandlers, msgProtoBuf)
-import Mu.Server (ServerError, ServerErrorIO) -- ServerT (NoPackages, Packages),
-import Network.GRPC.HTTP2.Encoding (gzip, uncompressed)
-import qualified Network.GRPC.Server as Wai
+import Mu.GRpc.Server (GRpcMessageProtocol (..), WrappedServer (Srv), gRpcMultipleAppTrans, msgProtoBuf)
+import Mu.Server (ServerError, ServerErrorIO)
 import qualified Network.Socket as Network
 import Network.Wai.Handler.Warp (defaultSettings, runSettingsSocket)
 import qualified System.Environment as OS
@@ -52,7 +50,7 @@ data HandshakeConfig = HandshakeConfig
   }
   deriving (Show, Eq)
 
-newtype Plugin = Plugin (MultipleServers 'MsgProtoBuf PluginT)
+newtype Plugin = Plugin [WrappedServer 'MsgProtoBuf PluginT]
 
 newtype PluginT a = PluginT
   { unPluginT ::
@@ -129,11 +127,11 @@ startServing sock (Plugin pluginServers) = do
   exit <- newEmptyMVar
   flip runReaderT health $ Health.setServingStatus "plugin" Health.ServingStatusServing
   let servers =
-        MSOneMore Controller.grpcControllerServer $
-          MSOneMore Broker.grpcBrokerServer $
-            MSOneMore Health.healthServer pluginServers
-      handlers = gRpcMultipleServerHandlers msgProtoBuf (runPluginT health broker exit) servers
-      app = Wai.grpcApp [uncompressed, gzip] handlers
+        Srv Controller.grpcControllerServer :
+        Srv Broker.grpcBrokerServer :
+        Srv Health.healthServer :
+        pluginServers
+      app = gRpcMultipleAppTrans msgProtoBuf (runPluginT health broker exit) servers
   race_ (takeMVar exit) $ runSettingsSocket defaultSettings sock app
 
 coreProtocolVersion :: Integer

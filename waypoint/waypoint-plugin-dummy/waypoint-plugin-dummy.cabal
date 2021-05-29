@@ -8,6 +8,8 @@ executable waypoint-plugin-dummy
     main-is:          Main.hs
     hs-source-dirs:   app
     default-language: Haskell2010
+    ghc-options:         -threaded -Wall
     build-depends:    base
                     , hashicorp-plugin
                     , waypoint-plugin-sdk
+                    , conduit

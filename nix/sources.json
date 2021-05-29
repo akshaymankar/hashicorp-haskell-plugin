@@ -24,15 +24,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "mu-haskell": {
-        "branch": "multiplex-grpc",
+        "branch": "pending-prs",
         "description": "Mu (μ) is a purely functional framework for building micro services.",
         "homepage": "http://higherkindness.io/mu-haskell/",
         "owner": "akshaymankar",
         "repo": "mu-haskell",
-        "rev": "1c1559b7facd2fe708dcdd76bbf745851a136e66",
-        "sha256": "14wj7vmi7r09m6hqcbgw8xbn028bj0fyf9nrnj6d00m85sgs1v8s",
+        "rev": "eceedde66fff5715606ea2dd12cc5962db85ff74",
+        "sha256": "1aj3d2hqg84vz64m7zbslpjmixf5a9kgyvfsprffq9fgr4qbwr4l",
         "type": "tarball",
-        "url": "https://github.com/akshaymankar/mu-haskell/archive/1c1559b7facd2fe708dcdd76bbf745851a136e66.tar.gz",
+        "url": "https://github.com/akshaymankar/mu-haskell/archive/eceedde66fff5715606ea2dd12cc5962db85ff74.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {

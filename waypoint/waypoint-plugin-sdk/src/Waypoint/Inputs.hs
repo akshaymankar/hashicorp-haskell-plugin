@@ -29,7 +29,7 @@ import Mu.Schema (FromSchema)
 import Mu.Schema.Class (ToSchema)
 import Optics.Core (view)
 import Optics.Getter (Getter, to)
-import Waypoint.Any (Any (..))
+import Waypoint.GoogleProto (Any (..))
 import Waypoint.FuncSpec
   ( FuncSpec (FuncSpec, args),
     FuncSpecArgs (FuncSpecArgs),

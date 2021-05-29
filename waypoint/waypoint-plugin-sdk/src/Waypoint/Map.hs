@@ -14,8 +14,8 @@ import GHC.Generics (Generic)
 import Mu.Schema (FromSchema, ToSchema)
 import Mu.Server (MonadServer, SingleServerT)
 import qualified Mu.Server as Mu
-import Waypoint.Any (Any)
 import Waypoint.FuncSpec (FuncSpec, FuncSpecArgs)
+import Waypoint.GoogleProto (Any)
 import Waypoint.Proto (Mapper, WaypointServerSchema)
 
 data MapRequest = MapRequest

@@ -11,7 +11,7 @@ import Data.Text (Text)
 import GHC.Generics (Generic)
 import Mu.Schema (FromSchema, Mapping ((:->)), ToSchema)
 import Mu.Schema.Class (CustomFieldMapping (..))
-import Waypoint.Any
+import Waypoint.GoogleProto
 import Waypoint.Proto (WaypointServerSchema)
 
 type FuncSpecValueMapping =

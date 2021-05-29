@@ -21,7 +21,7 @@ import Mu.Schema (FromSchema, ToSchema)
 import Mu.Server (HandlersT (H0, (:<|>:)), MonadServer, SingleServerT)
 import qualified Mu.Server as Mu
 import System.IO (hPrint, stderr)
-import Waypoint.Any (Any)
+import Waypoint.GoogleProto (Any)
 import Waypoint.Auth (auth, authSpec, isAuthenticator, validateAuth, validateAuthSpec)
 import Waypoint.Config (configStruct, configure, documentation)
 import Waypoint.FuncSpec (FuncSpec (..), FuncSpecArgs (..))

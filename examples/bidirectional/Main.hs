@@ -23,7 +23,7 @@ import qualified Data.Text as Text
 import qualified Hashicorp.GRpc.Broker as Broker
 import qualified Hashicorp.Plugin as Plugin
 import Mu.GRpc.Client.TyApps (GRpcReply (..), GrpcClient, gRpcCall)
-import Mu.GRpc.Server (GRpcMessageProtocol (MsgProtoBuf), MultipleServers (..))
+import Mu.GRpc.Server (GRpcMessageProtocol (MsgProtoBuf), WrappedServer (..))
 import Mu.Quasi.GRpc (grpc)
 import Mu.Schema (Term, (:/:))
 import Mu.Schema.Optics (record, record1, (^.))
@@ -37,7 +37,7 @@ main =
   Plugin.serve $
     Plugin.ServeConfig
       (Plugin.HandshakeConfig "BASIC_PLUGIN" "hello")
-      (Map.singleton 1 (Plugin.Plugin $ MSOneMore kvServer MSEnd))
+      (Map.singleton 1 (Plugin.Plugin [Srv kvServer]))
 
 type TermFrom ty field = Term ty (ty :/: field)
 

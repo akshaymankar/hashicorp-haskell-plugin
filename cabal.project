@@ -4,12 +4,13 @@ source-repository-package
   tag: 43e81a5c738128214c585dfb178225e4f5a644e9
   subdir: http2-grpc-proto3-wire
 
--- For with support for MultipleServers and few more fixes from upstream HEAD
+-- With support for MultipleServers
+-- With support for grpc client with bidirectional streaming
 source-repository-package
   type: git
   location: https://github.com/akshaymankar/mu-haskell
-  tag: 1c1559b7facd2fe708dcdd76bbf745851a136e66
-  subdir: core/rpc core/schema grpc/server adapter/protobuf
+  tag: eceedde66fff5715606ea2dd12cc5962db85ff74
+  subdir: core/rpc core/schema grpc/server grpc/client adapter/protobuf
 
 -- -- Unreleased version to support unix sockets
 source-repository-package
