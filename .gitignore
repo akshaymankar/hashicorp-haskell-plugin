@@ -1,3 +1,5 @@
 .dir-locals.el
+.direnv
+.hls-env
 dist-newstyle
 TAGS
