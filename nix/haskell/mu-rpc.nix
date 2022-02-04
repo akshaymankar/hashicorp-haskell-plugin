@@ -1,5 +1,5 @@
 { mkDerivation, aeson, base, conduit, http-types, mtl, mu-schema
-, sop-core, stdenv, template-haskell, text, wai
+, sop-core, lib, template-haskell, text, wai
 }:
 mkDerivation {
   pname = "mu-rpc";
@@ -11,5 +11,5 @@ mkDerivation {
   ];
   homepage = "https://higherkindness.io/mu-haskell/";
   description = "Protocol-independent declaration of services and servers";
-  license = stdenv.lib.licenses.asl20;
+  license = lib.licenses.asl20;
 }

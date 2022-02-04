@@ -1,6 +1,6 @@
 { mkDerivation, async, base, binary, bytestring, case-insensitive
 , data-default-class, http2, http2-client, http2-grpc-types
-, lifted-async, lifted-base, network, stdenv, text, tls
+, lifted-async, lifted-base, network, lib, text, tls, either
 }:
 mkDerivation {
   pname = "http2-client-grpc";
@@ -9,10 +9,10 @@ mkDerivation {
   libraryHaskellDepends = [
     async base binary bytestring case-insensitive data-default-class
     http2 http2-client http2-grpc-types lifted-async lifted-base
-    network text tls
+    network text tls either
   ];
   testHaskellDepends = [ base ];
   homepage = "https://github.com/haskell-grpc-native/http2-grpc-haskell/blob/master/http2-client-grpc/README.md";
   description = "Implement gRPC-over-HTTP2 clients";
-  license = stdenv.lib.licenses.bsd3;
+  license = lib.licenses.bsd3;
 }

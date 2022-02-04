@@ -3,3 +3,4 @@
 .hls-env
 dist-newstyle
 TAGS
+cabal.project.local

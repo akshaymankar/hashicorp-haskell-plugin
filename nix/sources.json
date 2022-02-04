@@ -1,4 +1,16 @@
 {
+    "data-diverse": {
+        "branch": "ghc9",
+        "description": null,
+        "homepage": null,
+        "owner": "akshaymankar",
+        "repo": "data-diverse",
+        "rev": "aeb352c5f34df5a89959689ff77813a61f2dd9cb",
+        "sha256": "1k9iyzm0qbw2w147fp49jj9li4dkqhr0m6qfidxdy0bjhzi97kzp",
+        "type": "tarball",
+        "url": "https://github.com/akshaymankar/data-diverse/archive/aeb352c5f34df5a89959689ff77813a61f2dd9cb.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "hashicorp-go-plugin": {
         "branch": "master",
         "description": "Golang plugin system over RPC.",
@@ -11,28 +23,40 @@
         "url": "https://github.com/hashicorp/go-plugin/archive/044aadd925bf9f027cb301b2af9bc6b60775dd22.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "http2-client": {
+        "branch": "http2-3",
+        "description": "A native HTTP2 client in Haskell",
+        "homepage": null,
+        "owner": "akshaymankar",
+        "repo": "http2-client",
+        "rev": "59df9dcaddf56930aca88e37efece280475f823e",
+        "sha256": "19gmql3hy0k4i71kiipkayp0fzjjbwgc2y5f5mrcnicnarfq0w4r",
+        "type": "tarball",
+        "url": "https://github.com/akshaymankar/http2-client/archive/59df9dcaddf56930aca88e37efece280475f823e.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "http2-grpc-haskell": {
-        "branch": "bump-proto3-wire",
+        "branch": "renamed-http2-client",
         "description": "gRPC over HTTP/2 for Haskell, client and server",
         "homepage": null,
         "owner": "akshaymankar",
         "repo": "http2-grpc-haskell",
-        "rev": "d673997b35fb8bb07695a18bbfcd5e0616425b67",
-        "sha256": "0v7d7igllalpa26nj35b2mal4ak8k6j0p41bdsn1mkz2bzi136lj",
+        "rev": "4037e853bb73e9c547fce31a11cf633a09907228",
+        "sha256": "1hliz5v0jw3i84fgm7y3q4blzcfkfx1ml1xcc52hks2jsnv5d9is",
         "type": "tarball",
-        "url": "https://github.com/akshaymankar/http2-grpc-haskell/archive/d673997b35fb8bb07695a18bbfcd5e0616425b67.tar.gz",
+        "url": "https://github.com/akshaymankar/http2-grpc-haskell/archive/4037e853bb73e9c547fce31a11cf633a09907228.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "mu-haskell": {
-        "branch": "pending-prs",
+        "branch": "ghc9",
         "description": "Mu (μ) is a purely functional framework for building micro services.",
         "homepage": "http://higherkindness.io/mu-haskell/",
         "owner": "akshaymankar",
         "repo": "mu-haskell",
-        "rev": "eceedde66fff5715606ea2dd12cc5962db85ff74",
-        "sha256": "1aj3d2hqg84vz64m7zbslpjmixf5a9kgyvfsprffq9fgr4qbwr4l",
+        "rev": "56365a1d410e5d8eaa311aaac33c536ee219479d",
+        "sha256": "0hm0b89sr1sq74vd2jbqpvimk76w7inqwsazrhmid4gkp7wzqp6c",
         "type": "tarball",
-        "url": "https://github.com/akshaymankar/mu-haskell/archive/eceedde66fff5715606ea2dd12cc5962db85ff74.tar.gz",
+        "url": "https://github.com/akshaymankar/mu-haskell/archive/56365a1d410e5d8eaa311aaac33c536ee219479d.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
@@ -47,16 +71,16 @@
         "url": "https://github.com/nmattia/niv/archive/af958e8057f345ee1aca714c1247ef3ba1c15f5e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
-    "nixpkgs": {
+    "proto3-wire": {
         "branch": "master",
-        "description": "DEPRECATED! This is an obsolete, read-only mirror of the NixOS/nixpkgs repository.",
-        "homepage": "https://github.com/NixOS/nixpkgs",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "16093daaf21153d25d8e7f7f4605adb5d1c13f06",
-        "sha256": "1m4w9cr9r7d0zglczyysrackq05npcpx0q759nnyjw2paj6xrim2",
+        "description": null,
+        "homepage": "https://hackage.haskell.org/package/proto3-wire",
+        "owner": "awakesecurity",
+        "repo": "proto3-wire",
+        "rev": "e05316bbd156947e10bf51188a1f3ceb65793810",
+        "sha256": "1yskv9idpvnilqi4sjjkdf1iijhy3dfhzlqdm751rs2g03b4v2fp",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/16093daaf21153d25d8e7f7f4605adb5d1c13f06.tar.gz",
+        "url": "https://github.com/awakesecurity/proto3-wire/archive/e05316bbd156947e10bf51188a1f3ceb65793810.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

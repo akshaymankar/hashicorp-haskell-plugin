@@ -1,5 +1,5 @@
 { mkDerivation, base, binary, bytestring, case-insensitive, hpack
-, http2-grpc-types, proto3-wire, stdenv, zlib
+, http2-grpc-types, proto3-wire, lib, zlib
 }:
 mkDerivation {
   pname = "http2-grpc-proto3-wire";
@@ -13,5 +13,5 @@ mkDerivation {
   prePatch = "hpack";
   homepage = "https://github.com/haskell-grpc-native/http2-grpc-haskell#readme";
   description = "Encoders based on `proto3-wire` for gRPC over HTTP2";
-  license = stdenv.lib.licenses.bsd3;
+  license = lib.licenses.bsd3;
 }

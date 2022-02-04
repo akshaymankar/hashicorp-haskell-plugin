@@ -1,5 +1,5 @@
 { mkDerivation, aeson, base, bytestring, containers
-, first-class-families, sop-core, stdenv, template-haskell, text
+, first-class-families, sop-core, lib, template-haskell, text
 , th-abstraction, unordered-containers, uuid, vector
 }:
 mkDerivation {
@@ -13,5 +13,5 @@ mkDerivation {
   ];
   homepage = "https://higherkindness.io/mu-haskell/";
   description = "Format-independent schemas for serialization";
-  license = stdenv.lib.licenses.asl20;
+  license = lib.licenses.asl20;
 }

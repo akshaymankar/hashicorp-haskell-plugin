@@ -1,6 +1,6 @@
 { mkDerivation, async, avro, base, binary, bytestring, conduit
 , http2-grpc-types, mtl, mu-grpc-common, mu-protobuf, mu-rpc
-, mu-schema, sop-core, stdenv, stm, stm-conduit, wai, warp
+, mu-schema, sop-core, lib, stm, stm-conduit, wai, warp
 , warp-grpc, warp-tls
 }:
 mkDerivation {
@@ -21,5 +21,5 @@ mkDerivation {
   ];
   homepage = "https://higherkindness.io/mu-haskell/";
   description = "gRPC servers for Mu definitions";
-  license = stdenv.lib.licenses.asl20;
+  license = lib.licenses.asl20;
 }

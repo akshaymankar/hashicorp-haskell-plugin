@@ -1,6 +1,6 @@
 { mkDerivation, base, bytestring, compendium-client, containers
 , http-client, http2-grpc-proto3-wire, language-protobuf, mu-rpc
-, mu-schema, proto3-wire, servant-client-core, sop-core, stdenv
+, mu-schema, proto3-wire, servant-client-core, sop-core, lib
 , template-haskell, text
 }:
 mkDerivation {
@@ -20,5 +20,5 @@ mkDerivation {
   ];
   homepage = "https://higherkindness.io/mu-haskell/";
   description = "Protocol Buffers serialization and gRPC schema import for Mu microservices";
-  license = stdenv.lib.licenses.asl20;
+  license = lib.licenses.asl20;
 }

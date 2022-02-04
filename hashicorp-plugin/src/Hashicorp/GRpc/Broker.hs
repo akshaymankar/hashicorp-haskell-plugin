@@ -39,7 +39,7 @@ import Mu.Schema (CustomFieldMapping (..), FromSchema, Mapping ((:->)), ToSchema
 import Mu.Server (MonadServer, SingleServerT, method, singleService)
 import Network.GRPC.Client (Timeout (Timeout), uncompressed)
 import Network.GRPC.Client.Helpers (Address (AddressTCP, AddressUnix), GrpcClient, GrpcClientConfig (GrpcClientConfig), setupGrpcClient)
-import Network.HTTP2.Client (ignoreFallbackHandler)
+import Network.HTTP2.Client2 (ignoreFallbackHandler)
 
 grpc "GRPCBrokerSchema" id "grpc_broker.proto"
 

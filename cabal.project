@@ -3,21 +3,26 @@
 source-repository-package
   type: git
   location: https://github.com/akshaymankar/mu-haskell
-  -- branch: ghc9 (2022-02-02)
-  tag: 283224c26743000efe733988e89a078c28a50ebe 
+  -- branch: ghc9 (2022-02-04)
+  tag: 56365a1d410e5d8eaa311aaac33c536ee219479d
   subdir: core/rpc core/schema grpc/server grpc/client adapter/protobuf adapter/avro
 
 -- Unmerged PRs
 source-repository-package
   type: git
-  location: https://github.com/wireapp/http2-grpc-haskell/
-  -- branch: master (2022-02-02)
-  tag: eea98418672626eafbace3181ca34bf44bee91c0
-  subdir: http2-client-grpc
+  location: https://github.com/akshaymankar/http2-grpc-haskell/
+  -- branch: renamed-http2-client (2022-02-04)
+  tag: 4037e853bb73e9c547fce31a11cf633a09907228
+  subdir: http2-client-grpc warp-grpc
 
 source-repository-package
   type: git
-  location: https://github.com/lucasdicioccio/http2-client
-  tag: c289336ed95e67be58768088c70c7f5061329b6b
+  location: https://github.com/akshaymankar/http2-client
+  -- branch: http2-3 (2022-02-04)
+  tag: 59df9dcaddf56930aca88e37efece280475f823e
 
-packages: ./hashicorp-plugin ./waypoint/waypoint-plugin-sdk ./waypoint/waypoint-plugin-dummy/ ./examples/*
+packages:
+  ./hashicorp-plugin
+  ./waypoint/waypoint-plugin-sdk
+  ./waypoint/waypoint-plugin-dummy/
+  ./examples/*

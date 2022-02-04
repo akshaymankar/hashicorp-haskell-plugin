@@ -1,6 +1,6 @@
 { mkDerivation, avro, base, binary, bytestring
 , http2-grpc-proto3-wire, http2-grpc-types, mu-avro, mu-protobuf
-, mu-rpc, mu-schema, stdenv
+, mu-rpc, mu-schema, lib
 }:
 mkDerivation {
   pname = "mu-grpc-common";
@@ -12,5 +12,5 @@ mkDerivation {
   ];
   homepage = "https://higherkindness.io/mu-haskell/";
   description = "gRPC for Mu, common modules for client and server";
-  license = stdenv.lib.licenses.asl20;
+  license = lib.licenses.asl20;
 }

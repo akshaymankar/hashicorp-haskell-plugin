@@ -31,10 +31,27 @@
         "type": "github"
       }
     },
+    "nixpkgs-patched": {
+      "locked": {
+        "lastModified": 1643917103,
+        "narHash": "sha256-6P6i9aapP0H7voTKvdgOvHqpDRaYf+5hhZ1h4R7AHOg=",
+        "owner": "akshaymankar",
+        "repo": "nixpkgs",
+        "rev": "a25dac89e0b02e7b350942a5b4d4a9e44d8758a9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akshaymankar",
+        "ref": "ghc9-generic-lens",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "nixpkgs-patched": "nixpkgs-patched"
       }
     }
   },
